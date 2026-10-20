@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Referral</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #101827, #174b64);
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+      background: #ffffff;
+      color: #222;
+      padding: 28px;
+      border-radius: 16px;
+      box-shadow: 0 10px 35px #0005;
+    }
+
+    h1, h2 {
+      text-align: center;
+    }
+
+    h1 {
+      color: #087f8c;
+      font-size: 28px;
+    }
+
+    p {
+      text-align: center;
+      color: #666;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 13px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 8px;
+      background: #087f8c;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #06636d;
+    }
+
+    .secondary {
+      background: #e9f2f4;
+      color: #087f8c;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #message {
+      color: #c0392b;
+      font-size: 14px;
+      overflow-wrap: anywhere;
+    }
+
+    .notice {
+      font-size: 12px;
+      line-height: 1.5;
+      margin-top: 18px;
+    }
+  </style>
+</head>
+<body>
+
+  <main class="container">
+    <h1>My Referral</h1>
+    <p>A simple registration and login demo</p>
+
+    <section id="register">
+      <h2>Create Account</h2>
+
+      <input id="regName"
+             type="text"
+             placeholder="Your name"
+             autocomplete="off">
+
+      <input id="regEmail"
+             type="text"
+             placeholder="Demo username"
+             autocomplete="off">
+
+      <input id="regPassword"
+             type="password"
+             placeholder="Demo password"
+             autocomplete="new-password">
+
+      <button onclick="registerUser()">Register</button>
+
+      <button class="secondary"
+              onclick="showLogin()">
+        Already registered? Login
+      </button>
+    </section>
+
+    <section id="login" class="hidden">
+      <h2>Login</h2>
+
+      <input id="loginEmail"
+             type="text"
+             placeholder="Demo username"
+             autocomplete="off">
+
+      <input id="loginPassword"
+             type="password"
+             placeholder="Demo password"
+             autocomplete="new-password">
+
+      <button onclick="loginUser()">Login</button>
+
+      <button class="secondary"
+              onclick="showRegister()">
+        Create account
+      </button>
+    </section>
+
+    <section id="dashboard" class="hidden">
+      <h2>Welcome!</h2>
+      <p id="welcome"></p>
+      <p>You are viewing the demo dashboard.</p>
+      <button onclick="logout()">Logout</button>
+    </section>
+
+    <p id="message" role="status"></p>
+
+    <p class="notice">
+      Educational demo only. Accounts exist in temporary
+      browser memory and disappear when the page is refreshed.
+      Do not enter real passwords or personal information.
+    </p>
+  </main>
+
+  <script>
+    // Temporary demo accounts; not real authentication.
+    const users = [];
+
+    function showLogin() {
+      document.getElementById("register").classList.add("hidden");
+      document.getElementById("login").classList.remove("hidden");
+      document.getElementById("message").textContent = "";
+    }
+
+    function showRegister() {
+      document.getElementById("login").classList.add("hidden");
+      document.getElementById("register").classList.remove("hidden");
+      document.getElementById("message").textContent = "";
+    }
+
+    function registerUser() {
+      const name = document.getElementById("regName").value.trim();
+      const username = document.getElementById("regEmail").value.trim();
+      const password = document.getElementById("regPassword").value;
+
+      if (!name || !username || !password) {
+        message("Please fill in all fields.");
+        return;
+      }
+
+      if (users.some(user => user.username === username)) {
+        message("This demo username already exists.");
+        return;
+      }
+
+      users.push({ name, username, password });
+
+      document.getElementById("loginEmail").value = username;
+      document.getElementById("loginPassword").value = "";
+
+      message("Demo account created! Please log in.");
+      showLogin();
+      message("Demo account created! Please log in.");
+    }
+
+    function loginUser() {
+      const username = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value;
+
+      const user = users.find(
+        item => item.username === username &&
+                item.password === password
+      );
+
+      if (!user) {
+        message("Demo account not found. Register first.");
+        return;
+      }
+
+      document.getElementById("login").classList.add("hidden");
+      document.getElementById("register").classList.add("hidden");
+      document.getElementById("dashboard").classList.remove("hidden");
+      document.getElementById("welcome").textContent =
+        "Hello, " + user.name + "!";
+      message("");
+    }
+
+    function logout() {
+      document.getElementById("dashboard").classList.add("hidden");
+      showLogin();
+      document.getElementById("loginPassword").value = "";
+    }
+
+    function message(text) {
+      document.getElementById("message").textContent = text;
+    }
+  </script>
+
+</body>
+</html>
